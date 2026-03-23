@@ -3,6 +3,16 @@ import { Geist, Geist_Mono, IBM_Plex_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
+import {
+  ClerkProvider,
+  SignedOut,
+  SignInButton,
+  SignOutButton,
+  SignUpButton,
+  UserButton,
+  SignedIn
+} from "@clerk/nextjs";
+ import { dark } from "@clerk/ui/themes";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -26,19 +36,35 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${plexMono.variable} antialiased`}>
-        <TooltipProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
-        </TooltipProvider>
-      </body>
-    </html>
+    <ClerkProvider
+      appearance={{
+        theme: dark,
+      }}
+    >
+      <html lang="en" suppressHydrationWarning>
+        <body className={`${inter.variable} ${plexMono.variable} antialiased`}>
+          <TooltipProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="dark"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <header>
+                <SignedOut>
+                  <SignInButton />
+                  <SignUpButton />
+                </SignedOut>
+                <SignedIn>
+                  <UserButton />
+                  {/* <SignOutButton/> */}
+                </SignedIn>
+              </header>
+              {children}
+            </ThemeProvider>
+          </TooltipProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
